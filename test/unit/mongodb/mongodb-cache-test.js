@@ -31,7 +31,6 @@ const should = require('should');
 const logger = require('logops');
 const nock = require('nock');
 const mongoUtils = require('../../tools/mongoDBUtils');
-const redisUtils = require('../../tools/redisUtils');
 const request = require('request');
 let contextBrokerMock;
 let statusAttributeMock;
@@ -111,11 +110,6 @@ const iotAgentConfig = {
         groupTTL: 10
     },
 
-    redis: {
-        enabled: true,
-        deviceDB: 0
-    },
-
     mongodb: {
         host: 'localhost',
         port: '27017',
@@ -135,7 +129,7 @@ const device3 = {
     polling: true
 };
 
-describe('Mongo-DB Redis cache ', function () {
+describe('Mongo-DB in-memory cache ', function () {
     beforeEach(function (done) {
         logger.setLevel('FATAL');
 
@@ -161,12 +155,10 @@ describe('Mongo-DB Redis cache ', function () {
         iotAgentLib.clearAll(function () {
             iotAgentLib.deactivate(function () {
                 mongoUtils.cleanDbs(function () {
-                    redisUtils.cleanDbs('localhost', 6379, function () {
-                        nock.cleanAll();
-                        iotAgentLib.setDataUpdateHandler();
-                        iotAgentLib.setCommandHandler();
-                        done();
-                    });
+                    nock.cleanAll();
+                    iotAgentLib.setDataUpdateHandler();
+                    iotAgentLib.setCommandHandler();
+                    done();
                 });
             });
         });

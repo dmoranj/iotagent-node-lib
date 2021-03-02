@@ -219,25 +219,6 @@ used for the same purpose. For instance:
 }
 ```
 
--   **redis**: Whether to use a redis cache in front of Mongo-DB when using the `mongodb` **deviceRegistry** option to
-    reduce I/O. This redis cache will hold and serve a set of recently requested groups and devices (up to a given
-    maximum time-to-live) and return the cached response so long as the value is still within `TTL`. When enabled the
-    default values are to retain values for up to 600 seconds. Separate settings are available for devices and service
-    groups.
-
-```javascript
-{
-    deviceHost: "localhost",
-    devicePort: 6379,
-    deviceDB: 1,
-    deviceTTL: 600,
-    groupHost: "localhost",
-    groupPort: 6379,
-    groupDB: 0,
-    groupTTL: 600
-}
-```
-
 -   **iotManager**: configures all the information needed to register the IoT Agent in the IoTManager. If this section
     is present, the IoTA will try to register to a IoTAM in the `host`, `port` and `path` indicated, with the
     information configured in the object. The IoTAgent URL that will be reported will be the `providedUrl` (described
@@ -313,8 +294,8 @@ used for the same purpose. For instance:
     standard, but the final decision has yet been confirmed), take into account it could change
 -   **explicitAttrs**: if this flag is activated, only provisioned attributes will be processed to Context Broker. This
     flag is overwritten by `explicitAttrs` flag in group or device provision.
--   **defaultEntityNameConjunction**: the default conjunction string used to compose a default `entity_name` when is not 
-    provided at device provisioning time; in that case `entity_name` is composed by `type` + `:` + `device_id`. 
+-   **defaultEntityNameConjunction**: the default conjunction string used to compose a default `entity_name` when is not
+    provided at device provisioning time; in that case `entity_name` is composed by `type` + `:` + `device_id`.
     Default value is `:`. This value is overwritten by `defaultEntityNameConjunction` in group provision.
 -   **relaxTemplateValidation**: if this flag is activated, `objectId` attributes for incoming devices are not
     validated, and may exceptionally include characters (such as semi-colons) which are
@@ -357,15 +338,6 @@ overrides.
 | IOTA_MEMCACHE_DEVICE_TTL         | `memCache.deviceTTL`            |
 | IOTA_MEMCACHE_GROUP_MAX          | `memCache.groupMax`             |
 | IOTA_MEMCACHE_GROUP_TTL          | `memCache.groupTTL`             |
-| IOTA_REDIS_ENABLED               | `redis.enabled`                 |
-| IOTA_REDIS_DEVICE_HOST           | `redis.deviceHost`              |
-| IOTA_REDIS_DEVICE_PORT           | `redis.devicePort`              |
-| IOTA_REDIS_DEVICE_DB             | `redis.deviceDB`                |
-| IOTA_REDIS_DEVICE_TTL            | `redis.deviceTTL`               |
-| IOTA_REDIS_GROUP_HOST            | `redis.groupHost`               |
-| IOTA_REDIS_GROUP_PORT            | `redis.groupPort`               |
-| IOTA_REDIS_GROUP_DB              | `redis.groupDB`                 |
-| IOTA_REDIS_GROUP_TTL             | `redis.groupTTL`                |
 | IOTA_LOG_LEVEL                   | `logLevel`                      |
 | IOTA_TIMESTAMP                   | `timestamp`                     |
 | IOTA_IOTAM_URL                   | `iotManager.url`                |

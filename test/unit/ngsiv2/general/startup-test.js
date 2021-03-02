@@ -178,57 +178,6 @@ describe('NGSI-v2 - Startup tests', function () {
         });
     });
 
-    describe('When the IoT Agent is started with Redis environment variables', function () {
-        beforeEach(function () {
-            process.env.IOTA_REDIS_ENABLED = 'true';
-            process.env.IOTA_REDIS_DEVICE_HOST = 'redishost1';
-            process.env.IOTA_REDIS_DEVICE_PORT = 6999;
-            process.env.IOTA_REDIS_DEVICE_PASSWORD = 'xxx';
-            process.env.IOTA_REDIS_DEVICE_DB = 2;
-            process.env.IOTA_REDIS_DEVICE_TTL = 9999;
-            process.env.IOTA_REDIS_GROUP_HOST = 'redishost2';
-            process.env.IOTA_REDIS_GROUP_PORT = 6998;
-            process.env.IOTA_REDIS_GROUP_PASSWORD = 'yyy';
-            process.env.IOTA_REDIS_GROUP_DB = 3;
-            process.env.IOTA_REDIS_GROUP_TTL = 999;
-        });
-
-        afterEach(function () {
-            delete process.env.IOTA_REDIS_ENABLED;
-            delete process.env.IOTA_REDIS_DEVICE_HOST;
-            delete process.env.IOTA_REDIS_DEVICE_PORT;
-            delete process.env.IOTA_REDIS_DEVICE_PASSWORD;
-            delete process.env.IOTA_REDIS_DEVICE_DB;
-            delete process.env.IOTA_REDIS_DEVICE_TTL;
-            delete process.env.IOTA_REDIS_GROUP_HOST;
-            delete process.env.IOTA_REDIS_GROUP_PORT;
-            delete process.env.IOTA_REDIS_GROUP_PASSWORD;
-            delete process.env.IOTA_REDIS_GROUP_DB;
-            delete process.env.IOTA_REDIS_GROUP_TTL;
-        });
-
-        afterEach(function (done) {
-            iotAgentLib.deactivate(done);
-        });
-
-        it('should load the correct configuration parameters', function (done) {
-            iotAgentLib.activate(iotAgentConfig, function (error) {
-                config.getConfig().redis.enabled.should.equal(true);
-                config.getConfig().redis.deviceHost.should.equal('redishost1');
-                config.getConfig().redis.devicePort.should.equal('6999');
-                config.getConfig().redis.devicePassword.should.equal('xxx');
-                config.getConfig().redis.deviceDB.should.equal('2');
-                config.getConfig().redis.deviceTTL.should.equal('9999');
-                config.getConfig().redis.groupHost.should.equal('redishost2');
-                config.getConfig().redis.groupPort.should.equal('6998');
-                config.getConfig().redis.groupPassword.should.equal('yyy');
-                config.getConfig().redis.groupDB.should.equal('3');
-                config.getConfig().redis.groupTTL.should.equal('999');
-                done();
-            });
-        });
-    });
-
     describe('When the IoT Agent is started with mongodb params', function () {
         beforeEach(function () {
             process.env.IOTA_MONGO_HOST = 'mongohost';
