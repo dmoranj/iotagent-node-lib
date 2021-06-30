@@ -21,7 +21,6 @@
  * please contact with::[contacto@tid.es]
  */
 
-// FIXME: parallel tests in device-configGroup-api-test.js. Remove this file if at the end /iot/services API (now Deprecated) is removed
 /* eslint-disable no-unused-vars */
 
 const iotAgentLib = require('../../../lib/fiware-iotagent-lib');
@@ -44,16 +43,16 @@ const iotAgentConfig = {
         baseRoot: '/'
     },
     types: {},
-    service: 'smartgondor',
+    service: 'smartGondor',
     subservice: 'gardens',
-    providerUrl: 'http://smartgondor.com',
+    providerUrl: 'http://smartGondor.com',
     deviceRegistrationDuration: 'P1M'
 };
 const optionsCreation = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'POST',
     json: {
-        services: [
+        configGroups: [
             {
                 resource: '/deviceTest',
                 apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',
@@ -89,7 +88,7 @@ const optionsCreation = {
         ]
     },
     headers: {
-        'fiware-service': 'testservice',
+        'fiware-service': 'TestService',
         'fiware-servicepath': '/testingPath'
     }
 };
@@ -98,16 +97,16 @@ const optionsDeviceCreation = {
     method: 'POST',
     json: utils.readExampleFile('./test/unit/examples/deviceProvisioningRequests/provisionNewDevice.json'),
     headers: {
-        'fiware-service': 'testservice',
+        'fiware-service': 'TestService',
         'fiware-servicepath': '/testingPath'
     }
 };
 const optionsDelete = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'DELETE',
     json: {},
     headers: {
-        'fiware-service': 'testservice',
+        'fiware-service': 'TestService',
         'fiware-servicepath': '/testingPath'
     },
     qs: {
@@ -116,11 +115,11 @@ const optionsDelete = {
     }
 };
 const optionsDeleteDevice = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'DELETE',
     json: {},
     headers: {
-        'fiware-service': 'testservice',
+        'fiware-service': 'TestService',
         'fiware-servicepath': '/testingPath'
     },
     qs: {
@@ -130,7 +129,7 @@ const optionsDeleteDevice = {
     }
 };
 const optionsUpdate = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'PUT',
     json: {
         trust: '8970A9078A803H3BL98PINEQRW8342HBAMS',
@@ -162,7 +161,7 @@ const optionsUpdate = {
         ]
     },
     headers: {
-        'fiware-service': 'testservice',
+        'fiware-service': 'TestService',
         'fiware-servicepath': '/testingPath'
     },
     qs: {
@@ -171,20 +170,20 @@ const optionsUpdate = {
     }
 };
 const optionsList = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'GET',
     json: {},
     headers: {
-        'fiware-service': 'testservice',
+        'fiware-service': 'TestService',
         'fiware-servicepath': '/*'
     }
 };
 const optionsGet = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'GET',
     json: {},
     headers: {
-        'fiware-service': 'testservice',
+        'fiware-service': 'TestService',
         'fiware-servicepath': '/testingPath'
     }
 };
@@ -215,7 +214,7 @@ describe('Device Group Configuration API', function () {
             request(optionsCreation, function (error, response, body) {
                 request(optionsList, function (error, response, body) {
                     body.count.should.equal(1);
-                    body.services[0].apikey.should.equal('801230BJKL23Y9090DSFL123HJK09H324HV8732');
+                    body.configGroups[0].apikey.should.equal('801230BJKL23Y9090DSFL123HJK09H324HV8732');
                     done();
                 });
             });
@@ -224,21 +223,21 @@ describe('Device Group Configuration API', function () {
             request(optionsCreation, function (error, response, body) {
                 request(optionsList, function (error, response, body) {
                     body.count.should.equal(1);
-                    should.exist(body.services[0].attributes);
-                    body.services[0].attributes.length.should.equal(1);
-                    body.services[0].attributes[0].name.should.equal('status');
+                    should.exist(body.configGroups[0].attributes);
+                    body.configGroups[0].attributes.length.should.equal(1);
+                    body.configGroups[0].attributes[0].name.should.equal('status');
 
-                    should.exist(body.services[0].lazy);
-                    body.services[0].lazy.length.should.equal(1);
-                    body.services[0].lazy[0].name.should.equal('luminescence');
+                    should.exist(body.configGroups[0].lazy);
+                    body.configGroups[0].lazy.length.should.equal(1);
+                    body.configGroups[0].lazy[0].name.should.equal('luminescence');
 
-                    should.exist(body.services[0].commands);
-                    body.services[0].commands.length.should.equal(1);
-                    body.services[0].commands[0].name.should.equal('wheel1');
+                    should.exist(body.configGroups[0].commands);
+                    body.configGroups[0].commands.length.should.equal(1);
+                    body.configGroups[0].commands[0].name.should.equal('wheel1');
 
-                    should.exist(body.services[0].static_attributes);
-                    body.services[0].static_attributes.length.should.equal(1);
-                    body.services[0].static_attributes[0].name.should.equal('bootstrapServer');
+                    should.exist(body.configGroups[0].static_attributes);
+                    body.configGroups[0].static_attributes.length.should.equal(1);
+                    body.configGroups[0].static_attributes[0].name.should.equal('bootstrapServer');
 
                     done();
                 });
@@ -248,8 +247,8 @@ describe('Device Group Configuration API', function () {
             request(optionsCreation, function (error, response, body) {
                 request(optionsList, function (error, response, body) {
                     body.count.should.equal(1);
-                    body.services[0].service.should.equal('testservice');
-                    body.services[0].subservice.should.equal('/testingPath');
+                    body.configGroups[0].service.should.equal('TestService');
+                    body.configGroups[0].subservice.should.equal('/testingPath');
                     done();
                 });
             });
@@ -274,10 +273,10 @@ describe('Device Group Configuration API', function () {
     });
     describe('When a new device group creation request arrives with explicitAttrs', function () {
         const optionsCreation1 = {
-            url: 'http://localhost:4041/iot/services',
+            url: 'http://localhost:4041/iot/configGroups',
             method: 'POST',
             json: {
-                services: [
+                configGroups: [
                     {
                         resource: '/deviceTest',
                         apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',
@@ -289,7 +288,7 @@ describe('Device Group Configuration API', function () {
                 ]
             },
             headers: {
-                'fiware-service': 'testservice',
+                'fiware-service': 'TestService',
                 'fiware-servicepath': '/testingPath'
             }
         };
@@ -304,8 +303,8 @@ describe('Device Group Configuration API', function () {
             request(optionsCreation1, function (error, response, body) {
                 request(optionsList, function (error, response, body) {
                     body.count.should.equal(1);
-                    body.services[0].apikey.should.equal('801230BJKL23Y9090DSFL123HJK09H324HV8732');
-                    body.services[0].explicitAttrs.should.equal(true);
+                    body.configGroups[0].apikey.should.equal('801230BJKL23Y9090DSFL123HJK09H324HV8732');
+                    body.configGroups[0].explicitAttrs.should.equal(true);
                     done();
                 });
             });
@@ -329,7 +328,7 @@ describe('Device Group Configuration API', function () {
         });
 
         afterEach(function () {
-            optionsCreation.headers['fiware-service'] = 'testservice';
+            optionsCreation.headers['fiware-service'] = 'TestService';
         });
 
         it('should fail with a 400 MISSING_HEADERS Error', function (done) {
@@ -361,11 +360,11 @@ describe('Device Group Configuration API', function () {
     });
     describe('When a device group with a missing mandatory attribute in the payload arrives', function () {
         beforeEach(function () {
-            delete optionsCreation.json.services[0].resource;
+            delete optionsCreation.json.configGroups[0].resource;
         });
 
         afterEach(function () {
-            optionsCreation.json.services[0].resource = '/deviceTest';
+            optionsCreation.json.configGroups[0].resource = '/deviceTest';
         });
 
         it('should fail with a 400 WRONG_SYNTAX error', function (done) {
@@ -411,7 +410,7 @@ describe('Device Group Configuration API', function () {
             nock.cleanAll();
 
             contextBrokerMock = nock('http://192.168.1.1:1026')
-                .matchHeader('fiware-service', 'testservice')
+                .matchHeader('fiware-service', 'TestService')
                 .matchHeader('fiware-servicepath', '/testingPath')
                 .post(
                     '/v1/updateContext',
@@ -423,7 +422,7 @@ describe('Device Group Configuration API', function () {
                 );
 
             contextBrokerMock
-                .matchHeader('fiware-service', 'testservice')
+                .matchHeader('fiware-service', 'TestService')
                 .matchHeader('fiware-servicepath', '/testingPath')
                 .post(
                     '/NGSI9/registerContext',
@@ -439,7 +438,7 @@ describe('Device Group Configuration API', function () {
                 );
 
             contextBrokerMock
-                .matchHeader('fiware-service', 'testservice')
+                .matchHeader('fiware-service', 'TestService')
                 .matchHeader('fiware-servicepath', '/testingPath')
                 .post(
                     '/NGSI9/registerContext',
@@ -455,7 +454,7 @@ describe('Device Group Configuration API', function () {
                 );
 
             contextBrokerMock
-                .matchHeader('fiware-service', 'testservice')
+                .matchHeader('fiware-service', 'TestService')
                 .matchHeader('fiware-servicepath', '/testingPath')
                 .post(
                     '/v1/updateContext',
@@ -480,7 +479,7 @@ describe('Device Group Configuration API', function () {
             const options = {
                 url: 'http://localhost:4041/iot/devices/Light1',
                 headers: {
-                    'fiware-service': 'testservice',
+                    'fiware-service': 'TestService',
                     'fiware-servicepath': '/testingPath'
                 },
                 method: 'GET'
@@ -531,7 +530,7 @@ describe('Device Group Configuration API', function () {
         });
 
         afterEach(function (done) {
-            optionsDeleteDifferentService.headers['fiware-service'] = 'testservice';
+            optionsDeleteDifferentService.headers['fiware-service'] = 'TestService';
             done();
         });
 
@@ -574,14 +573,14 @@ describe('Device Group Configuration API', function () {
             const optionsCreation2 = _.clone(optionsCreation);
             const optionsCreation3 = _.clone(optionsCreation);
 
-            optionsCreation1.json = { services: [] };
-            optionsCreation3.json = { services: [] };
+            optionsCreation1.json = { configGroups: [] };
+            optionsCreation3.json = { configGroups: [] };
 
-            optionsCreation1.json.services[0] = _.clone(optionsCreation.json.services[0]);
-            optionsCreation3.json.services[0] = _.clone(optionsCreation.json.services[0]);
+            optionsCreation1.json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
+            optionsCreation3.json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
 
-            optionsCreation1.json.services[0].apikey = 'qwertyuiop';
-            optionsCreation3.json.services[0].apikey = 'lkjhgfds';
+            optionsCreation1.json.configGroups[0].apikey = 'qwertyuiop';
+            optionsCreation3.json.configGroups[0].apikey = 'lkjhgfds';
 
             async.series(
                 [
@@ -598,8 +597,8 @@ describe('Device Group Configuration API', function () {
                 request(optionsList, function (error, response, body) {
                     body.count.should.equal(2);
 
-                    for (let i = 0; i < body.services.length; i++) {
-                        body.services[i].apikey.should.not.equal('801230BJKL23Y9090DSFL123HJK09H324HV8732');
+                    for (let i = 0; i < body.configGroups.length; i++) {
+                        body.configGroups[i].apikey.should.not.equal('801230BJKL23Y9090DSFL123HJK09H324HV8732');
                     }
 
                     done();
@@ -655,14 +654,14 @@ describe('Device Group Configuration API', function () {
             const optionsCreation2 = _.clone(optionsCreation);
             const optionsCreation3 = _.clone(optionsCreation);
 
-            optionsCreation1.json = { services: [] };
-            optionsCreation3.json = { services: [] };
+            optionsCreation1.json = { configGroups: [] };
+            optionsCreation3.json = { configGroups: [] };
 
-            optionsCreation1.json.services[0] = _.clone(optionsCreation.json.services[0]);
-            optionsCreation3.json.services[0] = _.clone(optionsCreation.json.services[0]);
+            optionsCreation1.json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
+            optionsCreation3.json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
 
-            optionsCreation1.json.services[0].apikey = 'qwertyuiop';
-            optionsCreation3.json.services[0].apikey = 'lkjhgfds';
+            optionsCreation1.json.configGroups[0].apikey = 'qwertyuiop';
+            optionsCreation3.json.configGroups[0].apikey = 'lkjhgfds';
 
             async.series(
                 [
@@ -688,13 +687,13 @@ describe('Device Group Configuration API', function () {
                     let found = false;
                     body.count.should.equal(3);
 
-                    for (let i = 0; i < body.services.length; i++) {
+                    for (let i = 0; i < body.configGroups.length; i++) {
                         if (
-                            body.services[i].apikey === '801230BJKL23Y9090DSFL123HJK09H324HV8732' &&
-                            body.services[i].resource === '/deviceTest'
+                            body.configGroups[i].apikey === '801230BJKL23Y9090DSFL123HJK09H324HV8732' &&
+                            body.configGroups[i].resource === '/deviceTest'
                         ) {
-                            body.services[i].cbHost.should.equal('http://anotherUnexistentHost:1026');
-                            body.services[i].static_attributes.length.should.equal(1);
+                            body.configGroups[i].cbHost.should.equal('http://anotherUnexistentHost:1026');
+                            body.configGroups[i].static_attributes.length.should.equal(1);
                             found = true;
                         }
                     }
@@ -712,7 +711,7 @@ describe('Device Group Configuration API', function () {
                 should.exist(callback);
                 newConfiguration.cbHost.should.equal('http://anotherUnexistentHost:1026');
                 newConfiguration.trust.should.equal('8970A9078A803H3BL98PINEQRW8342HBAMS');
-                newConfiguration.service.should.equal('testservice');
+                newConfiguration.service.should.equal('TestService');
                 newConfiguration.subservice.should.equal('/testingPath');
                 newConfiguration.resource.should.equal('/deviceTest');
                 newConfiguration.apikey.should.equal('801230BJKL23Y9090DSFL123HJK09H324HV8732');
@@ -734,7 +733,7 @@ describe('Device Group Configuration API', function () {
         });
 
         afterEach(function () {
-            optionsUpdate.headers['fiware-service'] = 'testservice';
+            optionsUpdate.headers['fiware-service'] = 'TestService';
         });
 
         it('should return a 200 OK', function (done) {
@@ -807,10 +806,10 @@ describe('Device Group Configuration API', function () {
 
     describe('When a device group update request arrives with a different explicitAttrs value', function () {
         const optionsCreation1 = {
-            url: 'http://localhost:4041/iot/services',
+            url: 'http://localhost:4041/iot/configGroups',
             method: 'POST',
             json: {
-                services: [
+                configGroups: [
                     {
                         resource: '/deviceTest',
                         apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',
@@ -822,18 +821,18 @@ describe('Device Group Configuration API', function () {
                 ]
             },
             headers: {
-                'fiware-service': 'testservice',
+                'fiware-service': 'TestService',
                 'fiware-servicepath': '/testingPath'
             }
         };
         const optionsUpdate1 = {
-            url: 'http://localhost:4041/iot/services',
+            url: 'http://localhost:4041/iot/configGroups',
             method: 'PUT',
             json: {
                 explicitAttrs: false
             },
             headers: {
-                'fiware-service': 'testservice',
+                'fiware-service': 'TestService',
                 'fiware-servicepath': '/testingPath'
             },
             qs: {
@@ -850,8 +849,8 @@ describe('Device Group Configuration API', function () {
             request(optionsUpdate1, function (error, response, body) {
                 request(optionsList, function (error, response, body) {
                     body.count.should.equal(1);
-                    body.services[0].apikey.should.equal('801230BJKL23Y9090DSFL123HJK09H324HV8732');
-                    body.services[0].explicitAttrs.should.equal(false);
+                    body.configGroups[0].apikey.should.equal('801230BJKL23Y9090DSFL123HJK09H324HV8732');
+                    body.configGroups[0].explicitAttrs.should.equal(false);
                     done();
                 });
             });
@@ -864,14 +863,14 @@ describe('Device Group Configuration API', function () {
             const optionsCreation2 = _.clone(optionsCreation);
             const optionsCreation3 = _.clone(optionsCreation);
 
-            optionsCreation2.json = { services: [] };
-            optionsCreation3.json = { services: [] };
+            optionsCreation2.json = { configGroups: [] };
+            optionsCreation3.json = { configGroups: [] };
 
-            optionsCreation2.json.services[0] = _.clone(optionsCreation.json.services[0]);
-            optionsCreation3.json.services[0] = _.clone(optionsCreation.json.services[0]);
+            optionsCreation2.json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
+            optionsCreation3.json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
 
-            optionsCreation2.json.services[0].apikey = 'qwertyuiop';
-            optionsCreation3.json.services[0].apikey = 'lkjhgfds';
+            optionsCreation2.json.configGroups[0].apikey = 'qwertyuiop';
+            optionsCreation3.json.configGroups[0].apikey = 'lkjhgfds';
 
             async.series(
                 [
@@ -893,9 +892,9 @@ describe('Device Group Configuration API', function () {
         it('should return all the configured device groups from the database', function (done) {
             request(optionsList, function (error, response, body) {
                 should.exist(body.count);
-                should.exist(body.services);
+                should.exist(body.configGroups);
                 body.count.should.equal(3);
-                body.services.length.should.equal(3);
+                body.configGroups.length.should.equal(3);
                 done();
             });
         });
@@ -915,7 +914,7 @@ describe('Device Group Configuration API', function () {
         });
         it('should return all the configured device groups from the database', function (done) {
             request(optionsGet, function (error, response, body) {
-                body.services[0].service.should.equal('testservice');
+                body.configGroups[0].service.should.equal('TestService');
                 done();
             });
         });
@@ -935,7 +934,7 @@ describe('Device Group Configuration API', function () {
             nock.cleanAll();
 
             contextBrokerMock = nock('http://unexistentHost:1026')
-                .matchHeader('fiware-service', 'testservice')
+                .matchHeader('fiware-service', 'TestService')
                 .matchHeader('fiware-servicepath', '/testingPath')
                 .post(
                     '/v1/updateContext',
@@ -968,7 +967,7 @@ describe('Device Group Configuration API', function () {
 
     describe('When a group listing request arrives with offset and limit parameters', function () {
         const optConstrainedList = {
-            url: 'http://localhost:4041/iot/services',
+            url: 'http://localhost:4041/iot/configGroups',
             method: 'GET',
             qs: {
                 limit: 3,
@@ -976,7 +975,7 @@ describe('Device Group Configuration API', function () {
             },
             json: {},
             headers: {
-                'fiware-service': 'testservice',
+                'fiware-service': 'TestService',
                 'fiware-servicepath': '/*'
             }
         };
@@ -987,9 +986,9 @@ describe('Device Group Configuration API', function () {
 
             for (let i = 0; i < 10; i++) {
                 optionsCreationList[i] = _.clone(optionsCreation);
-                optionsCreationList[i].json = { services: [] };
-                optionsCreationList[i].json.services[0] = _.clone(optionsCreation.json.services[0]);
-                optionsCreationList[i].json.services[0].apikey = 'qwertyuiop' + i;
+                optionsCreationList[i].json = { configGroups: [] };
+                optionsCreationList[i].json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
+                optionsCreationList[i].json.configGroups[0].apikey = 'qwertyuiop' + i;
                 creationFns.push(async.apply(request, optionsCreationList[i]));
             }
 
@@ -1006,15 +1005,15 @@ describe('Device Group Configuration API', function () {
         it('should use the limit parameter to constrain the number of entries', function (done) {
             request(optConstrainedList, function (error, response, body) {
                 should.exist(body.count);
-                should.exist(body.services);
-                body.services.length.should.equal(3);
+                should.exist(body.configGroups);
+                body.configGroups.length.should.equal(3);
                 done();
             });
         });
         it('should use return the total number of entities', function (done) {
             request(optConstrainedList, function (error, response, body) {
                 should.exist(body.count);
-                should.exist(body.services);
+                should.exist(body.configGroups);
                 body.count.should.equal(10);
                 done();
             });

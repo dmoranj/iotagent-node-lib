@@ -21,7 +21,6 @@
  * please contact with::[contacto@tid.es]
  */
 
-// FIXME: parallel tests in singleGroupConfigurationMode-test.js. Remove this file if at the end /iot/services API (now Deprecated) is removed
 /* eslint-disable no-unused-vars */
 
 const iotAgentLib = require('../../../lib/fiware-iotagent-lib');
@@ -48,9 +47,9 @@ const iotAgentConfig = {
     deviceRegistrationDuration: 'P1M'
 };
 const groupCreation = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'POST',
-    json: utils.readExampleFile('./test/unit/examples/groupProvisioningRequests/provisionFullGroup.json'),
+    json: utils.readExampleFile('./test/unit/examples/groupProvisioningRequests/provisionFullConfigGroup.json'),
     headers: {
         'fiware-service': 'testservice',
         'fiware-servicepath': '/testingPath'
@@ -83,9 +82,11 @@ describe('NGSI-v1 - Provisioning API: Single service mode', function () {
 
     describe('When a new configuration arrives to an already configured subservice', function () {
         const groupCreationDuplicated = {
-            url: 'http://localhost:4041/iot/services',
+            url: 'http://localhost:4041/iot/configGroups',
             method: 'POST',
-            json: utils.readExampleFile('./test/unit/examples/groupProvisioningRequests/provisionDuplicateGroup.json'),
+            json: utils.readExampleFile(
+                './test/unit/examples/groupProvisioningRequests/provisionDuplicateConfigGroup.json'
+            ),
             headers: {
                 'fiware-service': 'testservice',
                 'fiware-servicepath': '/testingPath'
@@ -168,9 +169,9 @@ describe('NGSI-v1 - Provisioning API: Single service mode', function () {
             }
         };
         const alternativeGroupCreation = {
-            url: 'http://localhost:4041/iot/services',
+            url: 'http://localhost:4041/iot/configGroups',
             method: 'POST',
-            json: utils.readExampleFile('./test/unit/examples/groupProvisioningRequests/provisionFullGroup.json'),
+            json: utils.readExampleFile('./test/unit/examples/groupProvisioningRequests/provisionFullConfigGroup.json'),
             headers: {
                 'fiware-service': 'AlternateService',
                 'fiware-servicepath': '/testingPath'

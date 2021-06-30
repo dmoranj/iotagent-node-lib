@@ -23,7 +23,6 @@
  * Modified by: Daniel Calvo - ATOS Research & Innovation
  */
 
-// FIXME: parallel tests in device-provisioning-configGroup-api_test.js. Remove this file if at the end /iot/services API (now Deprecated) is removed
 /* eslint-disable no-unused-vars */
 
 const iotAgentLib = require('../../../../lib/fiware-iotagent-lib');
@@ -441,10 +440,10 @@ describe('NGSI-v2 - Device provisioning API: Provision devices', function () {
                 }
             };
             const groupCreation = {
-                url: 'http://localhost:4041/iot/services',
+                url: 'http://localhost:4041/iot/configGroups',
                 method: 'POST',
                 json: {
-                    services: [
+                    configGroups: [
                         {
                             resource: '/Thing',
                             apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',
@@ -507,10 +506,10 @@ describe('NGSI-v2 - Device provisioning API: Provision devices', function () {
                 }
             };
             const groupCreation = {
-                url: 'http://localhost:4041/iot/services',
+                url: 'http://localhost:4041/iot/configGroups',
                 method: 'POST',
                 json: {
-                    services: [
+                    configGroups: [
                         {
                             resource: '/Thing',
                             apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',
@@ -580,10 +579,10 @@ describe('NGSI-v2 - Device provisioning API: Provision devices', function () {
                 }
             };
             const groupCreation = {
-                url: 'http://localhost:4041/iot/services',
+                url: 'http://localhost:4041/iot/configGroups',
                 method: 'POST',
                 json: {
-                    services: [
+                    configGroups: [
                         {
                             resource: '/Thing',
                             apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',
@@ -647,10 +646,10 @@ describe('NGSI-v2 - Device provisioning API: Provision devices', function () {
                 }
             };
             const groupCreation = {
-                url: 'http://localhost:4041/iot/services',
+                url: 'http://localhost:4041/iot/configGroups',
                 method: 'POST',
                 json: {
-                    services: [
+                    configGroups: [
                         {
                             resource: '/Thing',
                             apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',
@@ -721,10 +720,10 @@ describe('NGSI-v2 - Device provisioning API: Provision devices', function () {
                 }
             };
             const groupCreation = {
-                url: 'http://localhost:4041/iot/services',
+                url: 'http://localhost:4041/iot/configGroups',
                 method: 'POST',
                 json: {
-                    services: [
+                    configGroups: [
                         {
                             resource: '/Thing',
                             apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',

@@ -19,13 +19,14 @@
  *
  * For those usages not covered by the GNU Affero General Public License
  * please contact with::[contacto@tid.es]
+ *
+ * Modified by: Daniel Calvo - ATOS Research & Innovation
  */
 
-// FIXME: parallel tests in singleGroupConfigurationMode-test.js. Remove this file if at the end /iot/services API (now Deprecated) is removed
 /* eslint-disable no-unused-vars */
 
-const iotAgentLib = require('../../../lib/fiware-iotagent-lib');
-const utils = require('../../tools/utils');
+const iotAgentLib = require('../../../../lib/fiware-iotagent-lib');
+const utils = require('../../../tools/utils');
 const should = require('should');
 const nock = require('nock');
 let contextBrokerMock;
@@ -34,7 +35,8 @@ const iotAgentConfig = {
     logLevel: 'FATAL',
     contextBroker: {
         host: '192.168.1.1',
-        port: '1026'
+        port: '1026',
+        ngsiVersion: 'v2'
     },
     server: {
         port: 4041,
@@ -44,8 +46,7 @@ const iotAgentConfig = {
     service: 'smartgondor',
     singleConfigurationMode: true,
     subservice: 'gardens',
-    providerUrl: 'http://smartgondor.com',
-    deviceRegistrationDuration: 'P1M'
+    providerUrl: 'http://smartgondor.com'
 };
 const groupCreation = {
     url: 'http://localhost:4041/iot/services',
@@ -66,7 +67,7 @@ const deviceCreation = {
     }
 };
 
-describe('NGSI-v1 - Provisioning API: Single service mode', function () {
+describe('NGSI-v2 - Provisioning API: Single service mode', function () {
     beforeEach(function (done) {
         nock.cleanAll();
 
@@ -123,22 +124,17 @@ describe('NGSI-v1 - Provisioning API: Single service mode', function () {
             contextBrokerMock = nock('http://unexistentHost:1026')
                 .matchHeader('fiware-service', 'testservice')
                 .matchHeader('fiware-servicepath', '/testingPath')
-                .post('/NGSI9/registerContext')
-                .reply(
-                    200,
-                    utils.readExampleFile(
-                        './test/unit/examples/contextAvailabilityResponses/registerProvisionedDeviceSuccess.json'
-                    )
-                );
+                .post('/v2/registrations')
+                .reply(201, null, { Location: '/v2/registrations/6319a7f5254b05844116584d' });
 
+            // This mock does not check the payload since the aim of the test is not to verify
+            // device provisioning functionality. Appropriate verification is done in tests under
+            // provisioning folder
             contextBrokerMock
                 .matchHeader('fiware-service', 'testservice')
                 .matchHeader('fiware-servicepath', '/testingPath')
-                .post('/v1/updateContext')
-                .reply(
-                    200,
-                    utils.readExampleFile('./test/unit/examples/contextResponses/createProvisionedDeviceSuccess.json')
-                );
+                .post('/v2/entities?options=upsert')
+                .reply(204);
 
             request(groupCreation, function (error) {
                 request(deviceCreation, function (error, response, body) {
@@ -183,42 +179,32 @@ describe('NGSI-v1 - Provisioning API: Single service mode', function () {
             contextBrokerMock = nock('http://192.168.1.1:1026')
                 .matchHeader('fiware-service', 'testservice')
                 .matchHeader('fiware-servicepath', '/testingPath')
-                .post('/NGSI9/registerContext')
-                .reply(
-                    200,
-                    utils.readExampleFile(
-                        './test/unit/examples/contextAvailabilityResponses/registerProvisionedDeviceSuccess.json'
-                    )
-                );
+                .post('/v2/registrations')
+                .reply(201, null, { Location: '/v2/registrations/6319a7f5254b05844116584d' });
 
+            // This mock does not check the payload since the aim of the test is not to verify
+            // device provisioning functionality. Appropriate verification is done in tests under
+            // provisioning folder
             contextBrokerMock
                 .matchHeader('fiware-service', 'testservice')
                 .matchHeader('fiware-servicepath', '/testingPath')
-                .post('/v1/updateContext')
-                .reply(
-                    200,
-                    utils.readExampleFile('./test/unit/examples/contextResponses/createProvisionedDeviceSuccess.json')
-                );
+                .post('/v2/entities?options=upsert')
+                .reply(204);
 
             contextBrokerMock = nock('http://192.168.1.1:1026')
                 .matchHeader('fiware-service', 'AlternateService')
                 .matchHeader('fiware-servicepath', '/testingPath')
-                .post('/NGSI9/registerContext')
-                .reply(
-                    200,
-                    utils.readExampleFile(
-                        './test/unit/examples/contextAvailabilityResponses/registerProvisionedDeviceSuccess.json'
-                    )
-                );
+                .post('/v2/registrations')
+                .reply(201, null, { Location: '/v2/registrations/6319a7f5254b05844116584d' });
 
+            // This mock does not check the payload since the aim of the test is not to verify
+            // device provisioning functionality. Appropriate verification is done in tests under
+            // provisioning folder
             contextBrokerMock
                 .matchHeader('fiware-service', 'AlternateService')
                 .matchHeader('fiware-servicepath', '/testingPath')
-                .post('/v1/updateContext')
-                .reply(
-                    200,
-                    utils.readExampleFile('./test/unit/examples/contextResponses/createProvisionedDeviceSuccess.json')
-                );
+                .post('/v2/entities?options=upsert')
+                .reply(204);
 
             request(groupCreation, function (error) {
                 request(deviceCreation, function (error, response, body) {
@@ -254,22 +240,17 @@ describe('NGSI-v1 - Provisioning API: Single service mode', function () {
             contextBrokerMock = nock('http://unexistentHost:1026')
                 .matchHeader('fiware-service', 'testservice')
                 .matchHeader('fiware-servicepath', '/testingPath')
-                .post('/NGSI9/registerContext')
-                .reply(
-                    200,
-                    utils.readExampleFile(
-                        './test/unit/examples/contextAvailabilityResponses/registerProvisionedDeviceSuccess.json'
-                    )
-                );
+                .post('/v2/registrations')
+                .reply(201, null, { Location: '/v2/registrations/6319a7f5254b05844116584d' });
 
+            // This mock does not check the payload since the aim of the test is not to verify
+            // device provisioning functionality. Appropriate verification is done in tests under
+            // provisioning folder
             contextBrokerMock
                 .matchHeader('fiware-service', 'testservice')
                 .matchHeader('fiware-servicepath', '/testingPath')
-                .post('/v1/updateContext')
-                .reply(
-                    200,
-                    utils.readExampleFile('./test/unit/examples/contextResponses/createProvisionedDeviceSuccess.json')
-                );
+                .post('/v2/entities?options=upsert')
+                .reply(204);
 
             oldType = deviceCreation.json.devices[0].entity_type;
             delete deviceCreation.json.devices[0].entity_type;
@@ -295,36 +276,28 @@ describe('NGSI-v1 - Provisioning API: Single service mode', function () {
     describe('When a device is provisioned for a configuration', function () {
         beforeEach(function (done) {
             nock.cleanAll();
-
             contextBrokerMock = nock('http://unexistentHost:1026')
                 .matchHeader('fiware-service', 'testservice')
                 .matchHeader('fiware-servicepath', '/testingPath')
                 .post(
-                    '/NGSI9/registerContext',
+                    '/v2/registrations',
                     utils.readExampleFile(
-                        './test/unit/examples/contextAvailabilityRequests/registerProvisionedDeviceWithGroup.json'
+                        './test/unit/ngsiv2/examples' +
+                            '/contextAvailabilityRequests/registerProvisionedDeviceWithGroup.json'
                     )
                 )
-                .reply(
-                    200,
-                    utils.readExampleFile(
-                        './test/unit/examples/contextAvailabilityResponses/registerProvisionedDeviceSuccess.json'
-                    )
-                );
+                .reply(201, null, { Location: '/v2/registrations/6319a7f5254b05844116584d' });
 
             contextBrokerMock
                 .matchHeader('fiware-service', 'testservice')
                 .matchHeader('fiware-servicepath', '/testingPath')
                 .post(
-                    '/v1/updateContext',
+                    '/v2/entities?options=upsert',
                     utils.readExampleFile(
-                        './test/unit/examples/contextRequests/createProvisionedDeviceWithGroupAndStatic.json'
+                        './test/unit/ngsiv2/examples/contextRequests/createProvisionedDeviceWithGroupAndStatic.json'
                     )
                 )
-                .reply(
-                    200,
-                    utils.readExampleFile('./test/unit/examples/contextResponses/createProvisionedDeviceSuccess.json')
-                );
+                .reply(204);
 
             request(groupCreation, done);
         });

@@ -23,7 +23,6 @@
  * Modified by: Daniel Calvo - ATOS Research & Innovation
  */
 
-// FIXME: parallel tests in mongodb-configGroup-registry-test.js. Remove this file if at the end /iot/services API (now Deprecated) is removed
 /* eslint-disable no-unused-vars */
 
 const iotAgentLib = require('../../../lib/fiware-iotagent-lib');
@@ -60,10 +59,10 @@ const iotAgentConfig = {
 const mongo = require('mongodb').MongoClient;
 const mongoUtils = require('./mongoDBUtils');
 const optionsCreation = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'POST',
     json: {
-        services: [
+        configGroups: [
             {
                 resource: '/deviceTest',
                 apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',
@@ -102,7 +101,7 @@ const optionsCreation = {
     }
 };
 const optionsDelete = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'DELETE',
     json: {},
     headers: {
@@ -115,7 +114,7 @@ const optionsDelete = {
     }
 };
 const optionsList = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'GET',
     json: {},
     headers: {
@@ -124,7 +123,7 @@ const optionsList = {
     }
 };
 const optionsUpdate = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'PUT',
     json: {
         apikey: '801230BJKL23Y9090DSFL123HJK09H324HV8732',
@@ -166,7 +165,7 @@ const optionsUpdate = {
     }
 };
 const optionsGet = {
-    url: 'http://localhost:4041/iot/services',
+    url: 'http://localhost:4041/iot/configGroups',
     method: 'GET',
     json: {},
     headers: {
@@ -309,7 +308,7 @@ describe('MongoDB Group Registry test', function () {
 
         beforeEach(function (done) {
             optionsMultipleCreation.json = utils.readExampleFile(
-                './test/unit/examples/groupProvisioningRequests/multipleGroupsCreation.json'
+                './test/unit/examples/groupProvisioningRequests/multipleConfigGroupsCreation.json'
             );
 
             done();
@@ -337,14 +336,14 @@ describe('MongoDB Group Registry test', function () {
             const optionsCreation2 = _.clone(optionsCreation);
             const optionsCreation3 = _.clone(optionsCreation);
 
-            optionsCreation2.json = { services: [] };
-            optionsCreation3.json = { services: [] };
+            optionsCreation2.json = { configGroups: [] };
+            optionsCreation3.json = { configGroups: [] };
 
-            optionsCreation2.json.services[0] = _.clone(optionsCreation.json.services[0]);
-            optionsCreation3.json.services[0] = _.clone(optionsCreation.json.services[0]);
+            optionsCreation2.json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
+            optionsCreation3.json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
 
-            optionsCreation2.json.services[0].apikey = 'qwertyuiop';
-            optionsCreation3.json.services[0].apikey = 'lkjhgfds';
+            optionsCreation2.json.configGroups[0].apikey = 'qwertyuiop';
+            optionsCreation3.json.configGroups[0].apikey = 'lkjhgfds';
 
             async.series(
                 [
@@ -366,7 +365,7 @@ describe('MongoDB Group Registry test', function () {
 
     describe('When a device group listing arrives with a limit', function () {
         const optionsConstrained = {
-            url: 'http://localhost:4041/iot/services',
+            url: 'http://localhost:4041/iot/configGroups',
             method: 'GET',
             qs: {
                 limit: 3,
@@ -385,16 +384,16 @@ describe('MongoDB Group Registry test', function () {
 
             for (let i = 0; i < 10; i++) {
                 optionsCreationList[i] = _.clone(optionsCreation);
-                optionsCreationList[i].json = { services: [] };
-                optionsCreationList[i].json.services[0] = _.clone(optionsCreation.json.services[0]);
-                optionsCreationList[i].json.services[0].apikey = 'qwertyuiop' + i;
+                optionsCreationList[i].json = { configGroups: [] };
+                optionsCreationList[i].json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
+                optionsCreationList[i].json.configGroups[0].apikey = 'qwertyuiop' + i;
                 creationFns.push(async.apply(request, optionsCreationList[i]));
             }
 
             async.series(creationFns, done);
         });
 
-        it('should return the appropriate count of services', function (done) {
+        it('should return the appropriate count of configGroups', function (done) {
             request(optionsConstrained, function (error, response, body) {
                 body.count.should.equal(10);
                 done();
@@ -412,10 +411,10 @@ describe('MongoDB Group Registry test', function () {
                 should.exist(body);
                 should.exist(body.count);
                 body.count.should.equal(1);
-                should.exist(body.services);
-                should.exist(body.services.length);
-                body.services.length.should.equal(1);
-                body.services[0].service.should.equal('testservice');
+                should.exist(body.configGroups);
+                should.exist(body.configGroups.length);
+                body.configGroups.length.should.equal(1);
+                body.configGroups[0].service.should.equal('testservice');
                 done();
             });
         });
@@ -428,9 +427,9 @@ describe('MongoDB Group Registry test', function () {
 
             for (let i = 0; i < 10; i++) {
                 optionsCreationList[i] = _.clone(optionsCreation);
-                optionsCreationList[i].json = { services: [] };
-                optionsCreationList[i].json.services[0] = _.clone(optionsCreation.json.services[0]);
-                optionsCreationList[i].json.services[0].apikey = 'qwertyuiop' + i;
+                optionsCreationList[i].json = { configGroups: [] };
+                optionsCreationList[i].json.configGroups[0] = _.clone(optionsCreation.json.configGroups[0]);
+                optionsCreationList[i].json.configGroups[0].apikey = 'qwertyuiop' + i;
                 creationFns.push(async.apply(request, optionsCreationList[i]));
             }
 
@@ -442,9 +441,9 @@ describe('MongoDB Group Registry test', function () {
                 should.exist(body);
                 should.exist(body.count);
                 body.count.should.equal(10);
-                should.exist(body.services);
-                should.exist(body.services.length);
-                body.services.length.should.equal(10);
+                should.exist(body.configGroups);
+                should.exist(body.configGroups.length);
+                body.configGroups.length.should.equal(10);
                 done();
             });
         });
