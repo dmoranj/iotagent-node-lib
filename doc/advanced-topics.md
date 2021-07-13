@@ -70,10 +70,10 @@ curl http://${KEYSTONE_HOST}/v3/OS-TRUST/trusts \
 Apart from the generation of the trust, the use of secured Context Brokers should be transparent to the user of the IoT
 Agent.
 
-### GeoJSON support (this only applies for NGSI-LD, not for NGSI-v1 and NGSI-v2)
+### GeoJSON support
 
-The defined `type` of any GeoJSON attribute can be any set to any of the standard NGSI-v2 GeoJSON types - (e.g.
-`geo:json`, `geo:point`). NGSI-LD formats such as `GeoProperty`, `Point` and `LineString` are also accepted `type`
+The defined `type` of any GeoJSON attribute can be any set to any of the standard **NGSI-v2** GeoJSON types - (e.g.
+`geo:json`, `geo:point`). **NGSI-LD** formats such as `GeoProperty`, `Point` and `LineString` are also accepted `type`
 values. If the latitude and longitude are received as separate measures, the
 [expression language](expressionLanguage.md) can be used to concatenate them.
 
@@ -93,15 +93,16 @@ values. If the latitude and longitude are received as separate measures, the
 }
 ```
 
-For `attributes` and `static_attributes` which need to be formatted as GeoJSON values, three separate input formats are
-accepted. Provided the `type` is provisioned correctly, the `value` may be defined using any of the following formats:
+For `attributes` and `static_attributes` which need to be formatted as GeoJSON values, three separate input
+formats are accepted. Provided the `type` is provisioned correctly, the `value` may be defined using any of
+the following formats:
 
--   a comma delimited string
+-  a comma delimited string
 
 ```json
 {
-    "name": "location",
-    "value": "23, 12.5"
+  "name": "location",
+  "value": "23, 12.5"
 }
 ```
 
@@ -123,6 +124,27 @@ accepted. Provided the `type` is provisioned correctly, the `value` may be defin
         "type": "Point",
         "coordinates": [23, 12.5]
     }
+}
+```
+
+Because GeoJSON types (e.g. `Point`, `LineString` etc.) are native types in **NGSI-LD**, automatic GeoJSON conversion is switched on for NGSI-LD by default.
+
+With **NGSI-v2**, for backwards compatibility reasons, automatic GeoJSON conversion for types other than `geo:json` is turned off by default.
+Add the `autocast` configuration to the attribute to enable GeoJSON conversion. Each GeoJSON attribute can be provisioned as shown:
+
+```json
+{
+    "entity_type": "GPS",
+    "resource":    "/iot/d",
+    "protocol":    "PDI-IoTA-JSON",
+..etc
+    "attributes": [
+        {
+            "name": "observationSpace",
+            "type": "Polygon",
+            "autocast" : "true"
+        }
+    ]
 }
 ```
 
@@ -173,7 +195,7 @@ following:
 -   Temporal Properties (e.g. `Datetime`, `Date` , `Time`)
 -   GeoJSON types (e.g `Point`, `LineString`, `Polygon`, `MultiPoint`, `MultiLineString`, `MultiPolygon`)
 
-Most NGSI-LD attributes are sent to the Context Broker as _properties_. If a GeoJSON type or native JSON type is
+Most **NGSI-LD** attributes are sent to the Context Broker as _properties_. If a GeoJSON type or native JSON type is
 defined, the data will be converted to the appropriate type. Temporal properties should always be expressed in UTC,
 using ISO 8601. This ISO 8601 conversion is applied automatically for the `observedAt` _property-of-a-property_ metadata
 where present.
@@ -207,12 +229,11 @@ Other unrecognised `type` attributes will be passed as NGSI-LD data using the fo
     }
 ```
 
+
 ### NGSI-LD Linked Data support
 
-`static_attributes` may be supplied with an additional `link` data element when provisioning an IoT Agent to ensure that
-active attributes from the provisioned IoT Device may be maintained in parallel with a linked data entity . Take for
-example a temperature gauge placed within a building. The **Device** data model literally represents the IoT device
-itself, but the `temperature` attribute also needs to be shared with the **Building** entity
+`static_attributes` may be supplied with an additional `link` data element when provisioning an IoT Agent to ensure that active attributes from the provisioned IoT Device may be maintained in parallel with a linked data entity . Take for example a temperature gauge placed within a building.
+The **Device** data model literally represents the IoT device itself, but the `temperature` attribute also needs to be shared with the **Building** entity
 
 A `link` between them can be provisioned as shown:
 
@@ -246,8 +267,7 @@ e.g.:
   }
 ```
 
-Whenever a `temperature` measure is received **Device** is updated, and entity `urn:ngsi-ld:Building:001` is also
-updated as shown:
+Whenever a `temperature` measure is received **Device** is updated,  and entity `urn:ngsi-ld:Building:001` is also updated as shown:
 
 ```json
 "temperature": {
@@ -263,25 +283,25 @@ updated as shown:
 
 ### Autoprovision configuration (autoprovision)
 
-By default, when a measure arrives to the IoTAgent, if the `device_id` does not match with an existing one, then, the IoTA 
-creates a new device and a new entity according to the group config. Defining the field `autoprovision` to `false` 
-when provisioning the device group, the IoTA to reject the measure at the southbound, allowing only to persist the 
-data to devices that are already provisioned. It makes no sense to use this field in device provisioning since it is 
+By default, when a measure arrives to the IoTAgent, if the `device_id` does not match with an existing one, then, the IoTA
+creates a new device and a new entity according to the group config. Defining the field `autoprovision` to `false`
+when provisioning the device group, the IoTA to reject the measure at the southbound, allowing only to persist the
+data to devices that are already provisioned. It makes no sense to use this field in device provisioning since it is
 intended to avoid provisioning devices (and for it to be effective, it would have to be provisional).
 
 ### Explicitly defined attributes (explicitAttrs)
 
-If a given measure element (object_id) is not defined in the mappings of the device or group provision, the measure is stored 
+If a given measure element (object_id) is not defined in the mappings of the device or group provision, the measure is stored
 in the Context Broker by adding a new attribute to the entity with the same name of the undefined measure element. By adding the
-field `explicitAttrs` with `true` value to device or group provision, the IoTAgent rejects the measure elements that are not defined 
+field `explicitAttrs` with `true` value to device or group provision, the IoTAgent rejects the measure elements that are not defined
 in the mappings of device or group provision, persisting only the one defined in the mappings of the provision. If `explicitAttrs`
 is provided both at device and group level, the device level takes precedence.
 
 ### Configuring operation to persist the data in Context Broker (appendMode)
 
 This is a flag that can be enabled by activating the parameter `appendMode` in the configuration file or by using the `IOTA_APPEND_MODE`
-environment variable (more info [here](https://github.com/telefonicaid/iotagent-node-lib/blob/master/doc/installationguide.md)). 
-If this flag is activated, the update requests to the Context Broker will be performed always with APPEND type, instead of the 
+environment variable (more info [here](https://github.com/telefonicaid/iotagent-node-lib/blob/master/doc/installationguide.md)).
+If this flag is activated, the update requests to the Context Broker will be performed always with APPEND type, instead of the
 default UPDATE. This have implications in the use of attributes with Context Providers, so this flag should be used with care.
 
 ### Data mapping plugins
@@ -339,7 +359,7 @@ The library provides some plugins out of the box, in the `dataPlugins` collectio
 use the `addQueryMiddleware` and `addUpdateMiddleware` functions with the selected plugin, as in the example:
 
 ```javascript
-var iotaLib = require('iotagent-node-lib');
+var iotaLib = require("iotagent-node-lib");
 
 iotaLib.addUpdateMiddleware(iotaLib.dataPlugins.compressTimestamp.update);
 iotaLib.addQueryMiddleware(iotaLib.dataPlugins.compressTimestamp.query);
@@ -349,7 +369,7 @@ iotaLib.addQueryMiddleware(iotaLib.dataPlugins.compressTimestamp.query);
 
 This plugins change all the timestamp attributes found in the entity, and all the timestamp metadata found in any
 attribute, from the basic complete calendar timestamp of the ISO8601 (e.g.: 20071103T131805) to the extended complete
-calendar timestamp (e.g.: +002007-11-03T13:18). The middleware expects to receive the basic format in updates and return
+calendar timestamp (e.g.: `+002007-11-03T13:18`). The middleware expects to receive the basic format in updates and return
 it in queries (and viceversa, receive the extended one in queries and return it in updates).
 
 ##### Attribute Alias plugin (attributeAlias)
